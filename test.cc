@@ -3,10 +3,6 @@
 #include <math.h>
 #include <iostream>
 #define FREQUENCY 44100
-//22050
-//44100
-//22050
-
 float phase=0;
 long frame=0;
 float delta=1.0f/FREQUENCY;
@@ -17,21 +13,15 @@ extern "C" void mixeAudio(void *nichtVerwendet, Uint8 *stream, int laenge) {
   Uint8 *a=(Uint8*)&v;
   Uint8 *b=a;
   b++;
-phase=0;
+  Uint8*p=stream;
   for(int i=0;i<laenge/2;i++) {
     phase=float(frame)/FREQUENCY;
-    v=sin(phase*440*2)*15000;////+32768;
+    v=sin(phase*440*2*M_PI)*15000;
 
-    stream[i*2+1]=*b;
-    stream[i*2]=*a; //*b;
-    //std::cout<<v<<"  "<<(Uint16)*a<<"  "<<(Uint16)*b<<std::endl;
-   // phase+=delta;
+    *(p++)=*a;
+    *(p++)=*b;
     frame++;
   }
-  std::cout<<audioSpec.format<<" silence:"<<(int)audioSpec.silence<<"  samples:"<<audioSpec.samples<<
-    " padding:"<<audioSpec.padding<<" size:"<<audioSpec.size<<
-    
-    std::endl;
 }
 
 void runAudio() {
